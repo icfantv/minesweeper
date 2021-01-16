@@ -1,0 +1,14 @@
+# IDE config
+.idea
+.vscode
+
+# All node_modules directories
+node_modules
+
+# Typescript output directories
+cache-loader
+compiled
+dist
+
+# Test output directories
+test
