@@ -1,4 +1,5 @@
 # Minesweeper
+That fun, classic minesweeper game that was, like, the one bright spot of MS Windows 3.1.
 
 ## Game Features
 
