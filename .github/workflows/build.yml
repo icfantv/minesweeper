@@ -1,0 +1,24 @@
+name: Build Project
+
+on: [push, pull_request]
+  workflow_dispatch:
+
+jobs:
+  install_deps:
+    name: Install Dependencies
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+  build_job:
+    name: Build
+    runs-on: [ubuntu-latest, macos-latest]
+    needs: install_deps
+    steps:
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
