@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { GameLevel, GameLevelSpecs, GameState } from 'model';
 
@@ -31,11 +31,11 @@ const FaceButton = styled.button`
 `;
 
 export const GameButton: FC = () => {
-  const [gameLevel] = useRecoilState<GameLevel>(gameLevelSelector);
+  const gameLevel = useRecoilValue<GameLevel>(gameLevelSelector);
   const [gs, setGameState] = useRecoilState<GameState>(gameState);
   const [icon, setIcon] = useState(StateLabelMap[gs]);
-  const [, setMarkedCount] = useRecoilState<number>(markedCount);
-  const [, setTimerCount] = useRecoilState<number>(timerCountSelector);
+  const setMarkedCount = useSetRecoilState<number>(markedCount);
+  const setTimerCount = useSetRecoilState<number>(timerCountSelector);
 
   function handleClick(): void {
     setGameState(GameState.NEW);

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { activeCell, cellGrid } from 'components/grid';
 import { Cell, CellLabel, GameState, GridMap } from 'model';
@@ -44,11 +44,11 @@ const ImageCell = styled.img`
 `;
 
 export const GridCell: FC<Omit<Cell, 'content'>> = ({ label, row, column }) => {
-  const [icon, setIcon] = useState(CellLabelMap[label]);
-  const [, setActiveCell] = useRecoilState<Cell>(activeCell);
+  const [count, setCount] = useRecoilState<number>(markedCount);
   const [gameState, setGameState] = useRecoilState<GameState>(gameStateAtom);
   const [grid, setGrid] = useRecoilState<GridMap>(cellGrid);
-  const [count, setCount] = useRecoilState<number>(markedCount);
+  const [icon, setIcon] = useState(CellLabelMap[label]);
+  const setActiveCell = useSetRecoilState<Cell>(activeCell);
 
   const cell: Cell = {
     column,
