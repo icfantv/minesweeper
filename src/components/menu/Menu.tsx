@@ -28,9 +28,17 @@ export const Menu: FC = () => {
 
   return (
     <MenuDiv>
-      <MenuItem onClick={() => setGameLevel(GameLevel.BEGINNER)}>Beginner</MenuItem>|
-      <MenuItem onClick={() => setGameLevel(GameLevel.INTERMEDIATE)}>Intermediate</MenuItem>|
-      <MenuItem onClick={() => setGameLevel(GameLevel.ADVANCED)}>Advanced</MenuItem>
+      <MenuItem data-testid="game-level-beginner" onClick={() => setGameLevel(GameLevel.BEGINNER)}>
+        Beginner
+      </MenuItem>
+      |
+      <MenuItem data-testid="game-level-intermediate" onClick={() => setGameLevel(GameLevel.INTERMEDIATE)}>
+        Intermediate
+      </MenuItem>
+      |
+      <MenuItem data-testid="game-level-advanced" onClick={() => setGameLevel(GameLevel.ADVANCED)}>
+        Advanced
+      </MenuItem>
     </MenuDiv>
   );
 };
