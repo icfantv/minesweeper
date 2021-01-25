@@ -3,20 +3,9 @@ import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
 import { BeveledDiv } from 'components/common';
-import {
-  GameButton,
-  gameLevelSelector,
-  markedCount as markedCountAtom,
-  NumberPanel,
-  TimerPanel
-} from 'components/header';
-import { GameLevel } from 'model';
+import { GameButton, markedCount as markedCountAtom, NumberPanel, TimerPanel } from 'components/header';
 
-interface HeaderDivProps {
-  readonly gameLevel: GameLevel;
-}
-
-const HeaderDiv = styled(BeveledDiv)<HeaderDivProps>`
+const HeaderDiv = styled(BeveledDiv)`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,11 +16,10 @@ const HeaderDiv = styled(BeveledDiv)<HeaderDivProps>`
 `;
 
 export const Header: FC = () => {
-  const gameLevel = useRecoilValue<GameLevel>(gameLevelSelector);
   const markedCount = useRecoilValue<number>(markedCountAtom);
 
   return (
-    <HeaderDiv gameLevel={gameLevel}>
+    <HeaderDiv>
       <NumberPanel num={markedCount} />
       <GameButton />
       <TimerPanel />

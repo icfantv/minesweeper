@@ -1,19 +1,16 @@
 name: Build Project
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  build_job:
-    name: Build
-    runs-on: [ubuntu-latest, macos-latest]
+  build:
+    name: Install Dependencies and Compile Project
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - uses: actions/checkout@v2
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build
+      - run: npm install -g yarn
+      - run: yarn install
+      - run: yarn compile
