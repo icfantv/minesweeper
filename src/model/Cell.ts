@@ -20,9 +20,20 @@ export const enum CellLabel {
   UNCLEARED = 'UNCLEARED'
 }
 
+export const BombCountMap: { [key: number]: CellLabel } = {
+  1: CellLabel.ONE,
+  2: CellLabel.TWO,
+  3: CellLabel.THREE,
+  4: CellLabel.FOUR,
+  5: CellLabel.FIVE,
+  6: CellLabel.SIX,
+  7: CellLabel.SEVEN,
+  8: CellLabel.EIGHT
+};
+
 export interface Cell {
-  readonly label: CellLabel;
-  readonly content: CellLabel;
-  readonly row: number;
-  readonly column: number;
+  row: number;
+  column: number;
+  label: CellLabel;
+  content: CellLabel;
 }

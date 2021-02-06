@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 
 import Zero from './digit0.svg';
@@ -31,7 +31,7 @@ const DigitImage = styled.img`
   width: 16.5px;
 `;
 
-const Digit: FC<{ digit: number }> = ({ digit }) => {
+const Digit: React.FC<{ digit: number }> = ({ digit }) => {
   return <DigitImage className="digit" src={DIGIT_SVG_MAP[digit]} alt={digit.toString()} />;
 };
 

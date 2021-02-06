@@ -8,7 +8,7 @@ import FaceLose from './faceLose.svg';
 import FacePressed from './facePressed.svg';
 import FaceUnpressed from './faceUnpressed.svg';
 import FaceWin from './faceWin.svg';
-import { gameLevelSelector, gameState, markedCount, timerCountSelector } from 'components/header/HeaderAtoms';
+import { gameLevelSelector, gameStateSelector, markedCount, timerCountSelector } from 'components/header';
 
 const StateLabelMap: { [key in GameState]: string } = {
   [GameState.IN_PROGRESS]: FaceUnpressed,
@@ -32,7 +32,7 @@ const FaceButton = styled.button`
 
 export const GameButton: FC = () => {
   const gameLevel = useRecoilValue<GameLevel>(gameLevelSelector);
-  const [gs, setGameState] = useRecoilState<GameState>(gameState);
+  const [gs, setGameState] = useRecoilState<GameState>(gameStateSelector);
   const [icon, setIcon] = useState(StateLabelMap[gs]);
   const setMarkedCount = useSetRecoilState<number>(markedCount);
   const setTimerCount = useSetRecoilState<number>(timerCountSelector);

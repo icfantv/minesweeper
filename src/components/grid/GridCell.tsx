@@ -2,9 +2,10 @@ import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { activeCell, cellGrid } from 'components/grid';
-import { Cell, CellLabel, GameState, GridMap } from 'model';
-import { gameState as gameStateAtom, markedCount } from 'components/header';
+import { Cell, CellLabel, GameState } from 'model';
+import { activeCellAtom } from 'components/grid';
+import { cellAtoms } from 'components/grid/GridAtoms';
+import { gameStateSelector, markedCount } from 'components/header';
 
 import Bomb from './mine.svg';
 import BombCrossed from './wrongMine.svg';
@@ -43,54 +44,47 @@ const ImageCell = styled.img`
   width: 24px;
 `;
 
-export const GridCell: FC<Omit<Cell, 'content'>> = ({ label, row, column }) => {
-  const [count, setCount] = useRecoilState<number>(markedCount);
-  const [gameState, setGameState] = useRecoilState<GameState>(gameStateAtom);
-  const [grid, setGrid] = useRecoilState<GridMap>(cellGrid);
-  const [icon, setIcon] = useState(CellLabelMap[label]);
-  const setActiveCell = useSetRecoilState<Cell>(activeCell);
+interface GridCellProps {
+  row: number;
+  column: number;
+}
 
-  const cell: Cell = {
-    column,
-    content: label,
-    label,
-    row
-  };
+export const GridCell: FC<GridCellProps> = ({ row, column }) => {
+  const [count, setCount] = useRecoilState<number>(markedCount);
+  const setGameState = useSetRecoilState<GameState>(gameStateSelector);
+  const [cell, setCell] = useRecoilState<Cell>(cellAtoms(`${row}-${column}`));
+  const [icon, setIcon] = useState(CellLabelMap[cell.label]);
+  const setActiveCell = useSetRecoilState<Cell>(activeCellAtom);
 
   const handleClick = (): void => {
-    if (gameState === GameState.NEW) {
-      setGameState(GameState.IN_PROGRESS);
-    }
-
     setActiveCell(cell);
+    setGameState(GameState.IN_PROGRESS);
   };
 
   const handleRightClick = (e: React.MouseEvent<HTMLImageElement>): void => {
     e.preventDefault();
     let label = CellLabel.FLAG;
-    if (grid[row][column].label === CellLabel.FLAG) {
+    if (cell.label === CellLabel.FLAG) {
       label = CellLabel.UNCLEARED;
       setCount(count + 1);
     } else {
       setCount(count - 1);
     }
 
-    const cell = { ...grid[row][column], label };
-    const map: GridMap = {
-      [row]: {
-        ...grid[row],
-        [column]: cell
-      }
-    };
-    setGrid({ ...grid, ...map });
+    setCell((prevCell) => ({ ...prevCell, label }));
   };
 
+  if (icon !== CellLabelMap[cell.label]) {
+    setIcon(CellLabelMap[cell.label]);
+  }
+
+  console.log(`rendering ${row}-${column}, label: ${cell.label}, content: ${cell.content}, icon: ${icon}`);
   return (
     <ImageCell
       onClick={handleClick}
       onContextMenu={(e) => handleRightClick(e)}
       onMouseDown={() => setIcon(ClearedEmpty)}
-      onMouseUp={() => setIcon(CellLabelMap[label])}
+      onMouseUp={() => setIcon(CellLabelMap[cell.label])}
       src={icon}
     />
   );

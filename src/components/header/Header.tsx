@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
@@ -15,7 +15,7 @@ const HeaderDiv = styled(BeveledDiv)`
   height: 48px;
 `;
 
-export const Header: FC = () => {
+export const Header: React.FC = () => {
   const markedCount = useRecoilValue<number>(markedCountAtom);
 
   return (

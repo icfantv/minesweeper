@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 
@@ -14,7 +14,7 @@ const GameWrapper = styled.div<GameProps>`
   width: ${(props) => props.width}px;
 `;
 
-export const Game: FC = ({ children }) => {
+export const Game: React.FC = ({ children }) => {
   const gameLevel = useRecoilValue(gameLevelSelector);
   const { width } = GameLevelSpecs[gameLevel];
 

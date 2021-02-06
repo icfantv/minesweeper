@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import * as React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 
@@ -6,7 +6,7 @@ import { Menu } from 'components/menu';
 import { GameLevel } from 'model/Game';
 import { gameLevelSelector } from 'components/header';
 
-const Dummy: FC = () => {
+const Dummy: React.FC = () => {
   const gameLevel = useRecoilValue<GameLevel>(gameLevelSelector);
   return <div data-testid="dummy-component">{gameLevel}</div>;
 };

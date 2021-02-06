@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 
 import { Dash, Digits } from 'components/digits';
@@ -20,7 +20,7 @@ const Row = styled.div`
   }
 `;
 
-export const NumberPanel: FC<{ num: number }> = ({ num }) => {
+export const NumberPanel: React.FC<{ num: number }> = ({ num }) => {
   // split number up in to array of digits
   const chars = num.toString().split('');
   const digits: number[] = [];

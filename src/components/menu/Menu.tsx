@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import { GameLevel } from 'model/Game';
@@ -23,7 +23,7 @@ const MenuItem = styled(BaseMenu)`
   cursor: pointer;
 `;
 
-export const Menu: FC = () => {
+export const Menu: React.FC = () => {
   const setGameLevel = useSetRecoilState<GameLevel>(gameLevelSelector);
 
   return (
