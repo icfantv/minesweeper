@@ -1,11 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { Cell, CellLabel, GameState } from 'model';
-import { activeCellAtom } from 'components/grid';
-import { cellAtoms } from 'components/grid/GridAtoms';
-import { gameStateSelector, markedCount } from 'components/header';
+import { Cell, CellLabel, MouseButton } from 'model';
+import { activeCellSelector, cellAtoms } from 'components/grid/GridAtoms';
+import { markedCountSelector } from 'components/header';
 
 import Bomb from './mine.svg';
 import BombCrossed from './wrongMine.svg';
@@ -50,42 +49,74 @@ interface GridCellProps {
 }
 
 export const GridCell: FC<GridCellProps> = ({ row, column }) => {
-  const [count, setCount] = useRecoilState<number>(markedCount);
-  const setGameState = useSetRecoilState<GameState>(gameStateSelector);
   const [cell, setCell] = useRecoilState<Cell>(cellAtoms(`${row}-${column}`));
-  const [icon, setIcon] = useState(CellLabelMap[cell.label]);
-  const setActiveCell = useSetRecoilState<Cell>(activeCellAtom);
+  const setActiveCell = useSetRecoilState<Cell>(activeCellSelector);
+  const [oldLabel, setOldLabel] = React.useState<CellLabel>(CellLabel.UNCLEARED);
+  const adjustMarkedCount = useSetRecoilState<number>(markedCountSelector);
 
   const handleClick = (): void => {
+    console.log('handle click');
     setActiveCell(cell);
-    setGameState(GameState.IN_PROGRESS);
   };
 
   const handleRightClick = (e: React.MouseEvent<HTMLImageElement>): void => {
+    console.log('handle right click', e.button);
     e.preventDefault();
-    let label = CellLabel.FLAG;
+
+    // we need to separate the updating of the header bomb count from the
+    // cell label update because state updater functions must be pure.
     if (cell.label === CellLabel.FLAG) {
-      label = CellLabel.UNCLEARED;
-      setCount(count + 1);
+      adjustMarkedCount(1);
     } else {
-      setCount(count - 1);
+      adjustMarkedCount(-1);
     }
 
-    setCell((prevCell) => ({ ...prevCell, label }));
+    setCell((prevCell: Cell) => {
+      let label = CellLabel.FLAG;
+      if (prevCell.label === CellLabel.FLAG) {
+        label = CellLabel.UNCLEARED;
+      }
+
+      return {
+        ...prevCell,
+        label
+      };
+    });
+    // just call set active cell, but change signature to include how it was called
+    // IE, mouse button clicked
   };
 
-  if (icon !== CellLabelMap[cell.label]) {
-    setIcon(CellLabelMap[cell.label]);
-  }
+  const handleMouseDown = (e: React.MouseEvent<HTMLImageElement>): void => {
+    // ignore if right-click
+    if (e.button === MouseButton.SECONDARY) {
+      return;
+    }
 
-  console.log(`rendering ${row}-${column}, label: ${cell.label}, content: ${cell.content}, icon: ${icon}`);
+    if (cell.label === CellLabel.FLAG || cell.label === CellLabel.UNCLEARED) {
+      setOldLabel(cell.label);
+      setCell((prevCell) => ({ ...prevCell, label: CellLabel.CLEARED_EMPTY }));
+    }
+  };
+
+  const handleMouseUp = (e: React.MouseEvent<HTMLImageElement>): void => {
+    // ignore if right-click
+    if (e.button === MouseButton.SECONDARY) {
+      return;
+    }
+
+    if (oldLabel === CellLabel.FLAG || oldLabel === CellLabel.UNCLEARED) {
+      setCell((prevCell) => ({ ...prevCell, label: oldLabel }));
+    }
+  };
+
+  console.log(`rendering ${row}-${column}, label: ${cell.label}, content: ${cell.content}`);
   return (
     <ImageCell
       onClick={handleClick}
       onContextMenu={(e) => handleRightClick(e)}
-      onMouseDown={() => setIcon(ClearedEmpty)}
-      onMouseUp={() => setIcon(CellLabelMap[cell.label])}
-      src={icon}
+      onMouseDown={(e) => handleMouseDown(e)}
+      onMouseUp={(e) => handleMouseUp(e)}
+      src={CellLabelMap[cell.label]}
     />
   );
 };
